@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard de Previsão do Tempo com dados em tempo real">
+    <meta name="theme-color" content="#1e3a8a">
+    <title>🌤️ Weather Dashboard - Previsão do Tempo</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="app-title"><i class="fas fa-cloud-sun"></i> Weather Dashboard</h1>
+                <p class="app-subtitle">Previsão do tempo em tempo real</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-wrapper">
+                    <input
+                        type="text"
+                        id="cityInput"
+                        class="city-input"
+                        placeholder="Buscar cidade..."
+                        autocomplete="off"
+                    >
+                    <button id="searchBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button id="locationBtn" class="btn btn-secondary" title="Usar minha localização">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </button>
+                </div>
+                <div id="suggestions" class="suggestions hidden"></div>
+            </section>
+
+            <!-- Loading State -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Carregando dados climáticos...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error-message hidden"></div>
+
+            <!-- Current Weather Section -->
+            <section id="currentWeatherSection" class="current-weather-section hidden">
+                <div class="current-weather">
+                    <div class="city-info">
+                        <h2 id="cityName" class="city-name"></h2>
+                        <p id="currentDate" class="current-date"></p>
+                    </div>
+                    <div class="temperature-section">
+                        <div class="temperature-display">
+                            <img id="weatherIcon" class="weather-icon" src="" alt="">
+                            <div class="temperature-content">
+                                <span id="temperature" class="temperature"></span>
+                                <span id="weatherDescription" class="weather-description"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="detail-item">
+                            <i class="fas fa-tint"></i>
+                            <div>
+                                <span class="detail-label">Umidade</span>
+                                <span id="humidity" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-wind"></i>
+                            <div>
+                                <span class="detail-label">Vento</span>
+                                <span id="windSpeed" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-compress"></i>
+                            <div>
+                                <span class="detail-label">Pressão</span>
+                                <span id="pressure" class="detail-value"></span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-eye"></i>
+                            <div>
+                                <span class="detail-label">Visibilidade</span>
+                                <span id="visibility" class="detail-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hourly Forecast Section -->
+            <section id="hourlySection" class="forecast-section hidden">
+                <h3 class="section-title"><i class="fas fa-clock"></i> Previsão Horária (Próximas 24h)</h3>
+                <div class="hourly-forecast" id="hourlyForecast"></div>
+            </section>
+
+            <!-- Daily Forecast Section -->
+            <section id="dailySection" class="forecast-section hidden">
+                <h3 class="section-title"><i class="fas fa-calendar"></i> Previsão Diária (Próximos 7 dias)</h3>
+                <div class="daily-forecast" id="dailyForecast"></div>
+            </section>
+
+            <!-- Additional Info Section -->
+            <section id="additionalSection" class="additional-info-section hidden">
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Informações Adicionais</h3>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <i class="fas fa-sun"></i>
+                        <span class="info-label">Nascer do Sol</span>
+                        <span id="sunrise" class="info-value"></span>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-moon"></i>
+                        <span class="info-label">Pôr do Sol</span>
+                        <span id="sunset" class="info-value"></span>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-water"></i>
+                        <span class="info-label">Ponto de Orvalho</span>
+                        <span id="dewPoint" class="info-value"></span>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-umbrella"></i>
+                        <span class="info-label">Chance de Chuva</span>
+                        <span id="rainChance" class="info-value"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
+                <i class="fas fa-search"></i>
+                <h2>Nenhuma cidade selecionada</h2>
+                <p>Busque uma cidade para ver a previsão do tempo</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Dados fornecidos por <a href="https://openweathermap.org/" target="_blank">OpenWeatherMap</a></p>
+                <p><i class="fas fa-info-circle"></i> Última atualização: <span id="lastUpdate">-</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
